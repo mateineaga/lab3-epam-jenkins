@@ -54,7 +54,9 @@ pipeline{
         // }
 
         stage('Build docker image'){
-            agent { label 'docker' }
+            agent {
+                docker 'maven:3-alpine'  // Folosind un container Docker
+            }
             steps{
                 script {
                     sh '''
