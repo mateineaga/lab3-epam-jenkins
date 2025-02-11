@@ -71,7 +71,7 @@ pipeline{
         stage('Build docker image'){
             steps{
                 echo 'Building the image'
-                echo ${env.FULL_IMAGE_NAME}
+                echo "${env.FULL_IMAGE_NAME}"
                 sh 'docker build -t matei -f Dockerfile .'
             }
         }
