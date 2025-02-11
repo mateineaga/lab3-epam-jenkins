@@ -108,7 +108,7 @@ pipeline{
 
                         echo "Port: 3001"
 
-                        docker run -d --expose 3000 -p 3000:3000 nodedev:${IMAGE_TAG}
+                        docker run -d --expose 3001 -p 3001:3000 nodedev:${IMAGE_TAG}
                     fi
                     """
                 }
