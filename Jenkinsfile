@@ -73,15 +73,15 @@ pipeline{
                 script {
                     sh '''#!/bin/bash
                     if [[ "$BRANCH_NAME" == "main" ]]; then
-                        echo "Building the image for branch: '${BRANCH_NAME}'"
+                        echo "Building the image for branch: ${BRANCH_NAME}"
                         echo "Building nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
                         docker build -t "nodemain:${IMAGE_TAG}" -f Dockerfile .
                     else
-                        echo "Building the image for branch: '${BRANCH_NAME}'"
+                        echo "Building the image for branch: ${BRANCH_NAME}"
                         echo "Building nodedev:${IMAGE_TAG}"
                         echo "Port: 3001"
-                        docker build -t "nodedev:${IMAGE_TAG}" -f Dockerfile .
+                        docker build -t nodedev:${IMAGE_TAG} -f Dockerfile .
                     fi
                     '''
                 }
@@ -89,13 +89,25 @@ pipeline{
             }
         }
 
-        // stage('Deploy docker image'){
-        //     steps{
-        //         // echo 'Cleaning the existing containers!'
-        //         // sh 'docker rm $(docker ps -aq)'
-        //         echo 'Running the docker image created earlier!'
-        //         sh 'docker run -d --expose ${PORT} -p ${PORT}:${PORT} $(FULL_IMAGE_NAME)'
-        //     }
-        // }
+        stage('Deploy docker image'){
+            steps{
+                script {
+                    sh '''#!/bin/bash
+                    if [[ "$BRANCH_NAME" == "main" ]]; then
+                        echo "Building the image for branch: ${BRANCH_NAME}"
+                        echo "Running image nodemain:${IMAGE_TAG}"
+                        echo "Port: 3000"
+                        docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
+                    else
+                        echo "Building the image for branch: ${BRANCH_NAME}"
+                        echo "Running image nodedev:${IMAGE_TAG}"
+                        echo "Port: 3001"
+
+                        docker run -d --expose 3000 -p 3000:3000 nodedev:${IMAGE_TAG}
+                    fi
+                    '''
+                }
+            }
+        }
     }
 }
