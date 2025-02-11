@@ -13,15 +13,14 @@ pipeline{
             steps {
                 script {
                     // Folosim shell scripting pentru setarea variabilelor
-                    sh """#!/bin/bash
-                        if [[ "$BRANCH_NAME" == "main" ]]; then
-                            IMAGE_NAME = "nodemain:${IMAGE_TAG}"
-                            PORT = "3000"
-                        else
-                            IMAGE_NAME = "nodedev:${IMAGE_TAG}"
-                            PORT = "3001"
-                        fi
-                    """
+                    if (params.BRANCH_NAME == 'main') {
+                        IMAGE_NAME = "nodemain:${params.IMAGE_TAG}"
+                        PORT = "3000"
+                    } else {
+                        IMAGE_NAME = "nodedev:${params.IMAGE_TAG}"
+                        PORT = "3001"
+                    }
+
                 }
             }
         }
