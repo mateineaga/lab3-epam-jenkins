@@ -6,33 +6,23 @@ pipeline{
         string(name: 'IMAGE_TAG', defaultValue: 'v1.0', description: 'Docker image tag')
     }
 
-    // environment {
-    //     IMAGE_NAME = ''
-    //     FULL_IMAGE_NAME = ''
-    //     PORT = ''
-    // }
-
     stages {
-    //     stage('Setup Environment Variables') {
-    //         steps {
-    //             script {
-    //                 // Folosim shell scripting pentru setarea variabilelor
-    //                 sh '''#!/bin/bash
-    //                     if [[ "$BRANCH_NAME" == "main" ]]; then
-    //                         export IMAGE_NAME="nodemain"
-    //                         export PORT="3000"
-    //                     else
-    //                         export IMAGE_NAME="nodedev"
-    //                         export PORT="3001"
-    //                     fi
-
-    //                     export FULL_IMAGE_NAME="mateineaga10/${IMAGE_NAME}:${IMAGE_TAG}"
-    //                     echo "Full Image Name: ${FULL_IMAGE_NAME}"
-    //                     echo "Port: ${PORT}"
-    //                 '''
-    //             }
-    //         }
-    //     }
+        stage('Setup Environment Variables') {
+            steps {
+                script {
+                    // Folosim shell scripting pentru setarea variabilelor
+                    sh '''#!/bin/bash
+                        if [[ "$BRANCH_NAME" == "main" ]]; then
+                            def IMAGE_NAME = "nodemain:${IMAGE_TAG}"
+                            def PORT = "3000"
+                        else
+                            def IMAGE_NAME = "nodedev:${IMAGE_TAG}"
+                            def PORT = "3001"
+                        fi
+                    '''
+                }
+            }
+        }
 
         // stage('Checkout Code') {
         //     steps {
@@ -71,43 +61,50 @@ pipeline{
         stage('Build docker image'){
             steps{
                 script {
-                    sh '''#!/bin/bash
-                    if [[ "$BRANCH_NAME" == "main" ]]; then
-                        echo "Building the image for branch: ${BRANCH_NAME}"
-                        echo "Building nodemain:${IMAGE_TAG}"
-                        echo "Port: 3000"
-                        docker build -t "nodemain:${IMAGE_TAG}" -f Dockerfile .
-                    else
-                        echo "Building the image for branch: ${BRANCH_NAME}"
-                        echo "Building nodedev:${IMAGE_TAG}"
-                        echo "Port: 3001"
-                        docker build -t nodedev:${IMAGE_TAG} -f Dockerfile .
-                    fi
-                    '''
+                    echo "${FULL_IMAGE_NAME}"
+                    echo "${PORT}"
+                    // sh '''#!/bin/bash
+                    // if [[ "$BRANCH_NAME" == "main" ]]; then
+                    //     echo "Building the image for branch: ${BRANCH_NAME}"
+                    //     echo "Building nodemain:${IMAGE_TAG}"
+                    //     echo "Port: 3000"
+                    //     docker build -t "nodemain:${IMAGE_TAG}" -f Dockerfile .
+                    // else
+                    //     echo "Building the image for branch: ${BRANCH_NAME}"
+                    //     echo "Building nodedev:${IMAGE_TAG}"
+                    //     echo "Port: 3001"
+                    //     docker build -t nodedev:${IMAGE_TAG} -f Dockerfile .
+                    // fi
+                    // '''
                 }
                 
             }
         }
 
-        stage('Deploy docker image'){
-            steps{
-                script {
-                    sh '''#!/bin/bash
-                    if [[ "$BRANCH_NAME" == "main" ]]; then
-                        echo "Building the image for branch: ${BRANCH_NAME}"
-                        echo "Running image nodemain:${IMAGE_TAG}"
-                        echo "Port: 3000"
-                        docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
-                    else
-                        echo "Building the image for branch: ${BRANCH_NAME}"
-                        echo "Running image nodedev:${IMAGE_TAG}"
-                        echo "Port: 3001"
+        // stage('Deploy docker image'){
+        //     steps{
+        //         script {
+        //             sh '''#!/bin/bash
+        //             echo "Cleaning the running&stopped containers!"
 
-                        docker run -d --expose 3000 -p 3000:3000 nodedev:${IMAGE_TAG}
-                    fi
-                    '''
-                }
-            }
-        }
+        //             docker stop 
+        //             docker rm $(docker ps -aq)
+
+        //             if [[ "$BRANCH_NAME" == "main" ]]; then
+        //                 echo "Building the image for branch: ${BRANCH_NAME}"
+        //                 echo "Running image nodemain:${IMAGE_TAG}"
+        //                 echo "Port: 3000"
+        //                 docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
+        //             else
+        //                 echo "Building the image for branch: ${BRANCH_NAME}"
+        //                 echo "Running image nodedev:${IMAGE_TAG}"
+        //                 echo "Port: 3001"
+
+        //                 docker run -d --expose 3000 -p 3000:3000 nodedev:${IMAGE_TAG}
+        //             fi
+        //             '''
+        //         }
+        //     }
+        // }
     }
 }
