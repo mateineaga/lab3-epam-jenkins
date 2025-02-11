@@ -7,12 +7,34 @@ pipeline{
     }
 
     environment {
-        PORT = "${params.BRANCH_NAME}" == "main" ? "3000" : "3001"
-        IMAGE_NAME = "${params.BRANCH_NAME}" == "main" ? "nodemain" : "nodedev"
-        FULL_IMAGE_NAME = "mateineaga10/${env.IMAGE_NAME}:${params.IMAGE_TAG}"
+        // Declara variabilele într-o secțiune `environment` fără expresii condiționale
+        IMAGE_NAME = ''
+        FULL_IMAGE_NAME = ''
+        PORT = ''
     }
 
+
     stages{
+        stage('Setup Environment Variables') {
+            steps {
+                script {
+                    // Setează variabilele de mediu folosind o condiție în secțiunea `script`
+                    if (params.BRANCH_NAME == 'main') {
+                        env.IMAGE_NAME = 'nodemain'
+                        env.PORT = '3000'
+                    } else {
+                        env.IMAGE_NAME = 'nodedev'
+                        env.PORT = '3001'
+                    }
+
+                    // Combină variabilele pentru a crea full image name
+                    env.FULL_IMAGE_NAME = "mateineaga10/${env.IMAGE_NAME}:${params.IMAGE_TAG}"
+                    echo "Full Image Name: ${env.FULL_IMAGE_NAME}"
+                    echo "Port: ${env.PORT}"
+                }
+            }
+        }
+
         stage('Checkout Code') {
             steps {
                 script {
