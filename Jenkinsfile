@@ -65,8 +65,8 @@ pipeline{
                 script {
                     sh '''#!/bin/bash
                         echo "Cleaning the running&stopped containers!"
-                        docker stop mateineaga10/nodemain:v1.0 || true
-                        docker rm mateineaga10/nodemain || true
+                        docker stop nodemain || true
+                        docker rm nodemain || true
 
                         echo "Login..."
                         echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
