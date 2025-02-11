@@ -64,9 +64,11 @@ pipeline{
         }
 
         stage('Build docker image'){
-            // agent {
-            //     docker 'docker'  // Folosind un container Docker
-            // }
+            agent {
+                docker {
+                    image 'docker'
+                } 
+            }
             steps{
                 script {
                     sh '''
