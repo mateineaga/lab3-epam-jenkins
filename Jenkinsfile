@@ -5,13 +5,13 @@ pipeline{
         stage('Checkout Code') {
             steps {
                 script {
-                    echo "Checking out branch ${params.BRANCH_NAME}"
+                    echo "Checking out branch main"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "*/${params.BRANCH_NAME}"]],
+                        branches: [[name: "*/main"]],
                         userRemoteConfigs: [[
                             url: 'https://github.com/mateineaga/lab3-epam-jenkins.git',
-                            credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
+                            credentialsId: 'GitCredentials'
                         ]]
                     ])
                 }
