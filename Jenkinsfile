@@ -70,18 +70,20 @@ pipeline{
 
         stage('Build docker image'){
             steps{
-                sh '''#!/bin/bash
-                if [[ "$BRANCH_NAME" == "main" ]]; then
-                    echo 'Building the image for ${BRANCH_NAME}'
-                    echo "${BRANCH_NAME}"
-                    echo "Building nodemain:${IMAGE_TAG}"
-                    echo "Port: 3000"
-                else
-                    echo 'Building the image for ${BRANCH_NAME}'
-                    echo "${BRANCH_NAME}"
-                    echo "Building nodemain:${IMAGE_TAG}"
-                    echo "Port: 3001"
-                '''
+                script {
+                    sh '''#!/bin/bash
+                    if [[ "$BRANCH_NAME" == "main" ]]; then
+                        echo 'Building the image for ${BRANCH_NAME}'
+                        echo "${BRANCH_NAME}"
+                        echo "Building nodemain:${IMAGE_TAG}"
+                        echo "Port: 3000"
+                    else
+                        echo 'Building the image for ${BRANCH_NAME}'
+                        echo "${BRANCH_NAME}"
+                        echo "Building nodemain:${IMAGE_TAG}"
+                        echo "Port: 3001"
+                    '''
+                }
                 // sh 'docker build -t "${FULL_IMAGE_NAME}" -f Dockerfile .'
             }
         }
