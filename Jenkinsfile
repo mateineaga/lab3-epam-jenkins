@@ -22,19 +22,6 @@ pipeline{
             }
         }
 
-        // stage('Hadolint install'){
-        //     steps{
-        //         script{
-        //             sh'''#!/bin/bash
-        //             wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-        //             sudo mv hadolint /usr/local/bin/hadolint
-        //             chmod +x /usr/local/bin/hadolint
-        //             hadolint --version
-        //             '''
-        //         }
-        //     }
-        // }
-
         // stage('Build'){
         //     steps{
         //         nodejs('node'){
@@ -67,6 +54,7 @@ pipeline{
             agent {
                 docker {
                     image 'docker'
+                    args '-v $HOME/.docker:/root/.docker'
                 } 
             }
             steps{
