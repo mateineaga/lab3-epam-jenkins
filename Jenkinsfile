@@ -18,19 +18,21 @@ pipeline{
         stage('Setup Environment Variables') {
             steps {
                 script {
-                    // Setează variabilele de mediu folosind o condiție în secțiunea `script`
-                    if (params.BRANCH_NAME == 'main') {
-                        env.IMAGE_NAME = 'nodemain'
-                        env.PORT = '3000'
-                    } else {
-                        env.IMAGE_NAME = 'nodedev'
-                        env.PORT = '3001'
-                    }
+                    // // Setează variabilele de mediu folosind o condiție în secțiunea `script`
+                    // if (params.BRANCH_NAME == 'main') {
+                    //     env.IMAGE_NAME = 'nodemain'
+                    //     env.PORT = '3000'
+                    // } else {
+                    //     env.IMAGE_NAME = 'nodedev'
+                    //     env.PORT = '3001'
+                    // }
 
-                    // Combină variabilele pentru a crea full image name
-                    env.FULL_IMAGE_NAME = "mateineaga10/${env.IMAGE_NAME}:${params.IMAGE_TAG}"
-                    echo "Full Image Name: ${env.FULL_IMAGE_NAME}"
-                    echo "Port: ${env.PORT}"
+                    // // Combină variabilele pentru a crea full image name
+                    // env.FULL_IMAGE_NAME = "mateineaga10/${env.IMAGE_NAME}:${params.IMAGE_TAG}"
+                    // echo "Full Image Name: ${env.FULL_IMAGE_NAME}"
+                    // echo "Port: ${env.PORT}"
+                    echo $BRANCH_NAME
+                    echo $IMAGE_TAG
                 }
             }
         }
