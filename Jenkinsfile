@@ -67,13 +67,11 @@ pipeline{
                     if [[ "${BRANCH_NAME}" == "main" ]]; then
                         echo "Building the image for branch: ${BRANCH_NAME}"
                         echo "Building nodemain:${IMAGE_TAG}"
-                        echo "Port: 3000"
 
                         docker build -t "nodemain:${IMAGE_TAG}" -f Dockerfile .
                     else
                         echo "Building the image for branch: ${BRANCH_NAME}"
                         echo "Building nodedev:${IMAGE_TAG}"
-                        echo "Port: 3001"
 
                         docker build -t nodedev:${IMAGE_TAG} -f Dockerfile .
                     fi
