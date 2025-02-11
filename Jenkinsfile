@@ -52,26 +52,21 @@ pipeline{
         //         }
         //     }
         // }
-        stage("lint dockerfile") {
+        stage("hadolint Dockerfile") {
             agent {
                 docker {
                     image 'hadolint/hadolint:latest-debian'  // Folosește imaginea corespunzătoare
                 }
             }
             steps {
-                sh 'hadolint Dockerfile | tee report.txt'  // Salvezi output-ul în report.txt
-            }
-            post {
-                always {
-                    archiveArtifacts 'report.txt'  // Arhivezi report.txt
-                }
+                sh 'hadolint Dockerfile'  // Salvezi output-ul în report.txt
             }
         }
 
         stage('Build docker image'){
-            agent {
-                docker 'docker'  // Folosind un container Docker
-            }
+            // agent {
+            //     docker 'docker'  // Folosind un container Docker
+            // }
             steps{
                 script {
                     sh '''
