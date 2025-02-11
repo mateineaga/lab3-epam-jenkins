@@ -1,10 +1,15 @@
 pipeline{
     agent any
-    stage('Testing') {
+
+    stages {
+        stage('Hello') {
             steps {
                 script {
-                    echo "Hello from branch main"
+                    echo "Hello from branch dev!"
+                    
                 }
             }
         }
+    }
+
 }
