@@ -1,6 +1,5 @@
 def IMAGE_NAME
 def PORT
-
 pipeline{
     agent any
 
@@ -14,7 +13,7 @@ pipeline{
             steps {
                 script {
                     // Folosim shell scripting pentru setarea variabilelor
-                    sh '''#!/bin/bash
+                    sh """#!/bin/bash
                         if [[ "$BRANCH_NAME" == "main" ]]; then
                             IMAGE_NAME = "nodemain:${IMAGE_TAG}"
                             PORT = "3000"
@@ -22,7 +21,7 @@ pipeline{
                             IMAGE_NAME = "nodedev:${IMAGE_TAG}"
                             PORT = "3001"
                         fi
-                    '''
+                    """
                 }
             }
         }
@@ -66,7 +65,7 @@ pipeline{
                 script {
                     echo "${FULL_IMAGE_NAME}"
                     echo "${PORT}"
-                    // sh '''#!/bin/bash
+                    // sh """#!/bin/bash
                     // if [[ "$BRANCH_NAME" == "main" ]]; then
                     //     echo "Building the image for branch: ${BRANCH_NAME}"
                     //     echo "Building nodemain:${IMAGE_TAG}"
@@ -78,7 +77,7 @@ pipeline{
                     //     echo "Port: 3001"
                     //     docker build -t nodedev:${IMAGE_TAG} -f Dockerfile .
                     // fi
-                    // '''
+                    // """
                 }
                 
             }
@@ -87,7 +86,7 @@ pipeline{
         // stage('Deploy docker image'){
         //     steps{
         //         script {
-        //             sh '''#!/bin/bash
+        //             sh """#!/bin/bash
         //             echo "Cleaning the running&stopped containers!"
 
         //             docker stop 
@@ -105,7 +104,7 @@ pipeline{
 
         //                 docker run -d --expose 3000 -p 3000:3000 nodedev:${IMAGE_TAG}
         //             fi
-        //             '''
+        //             """
         //         }
         //     }
         // }
