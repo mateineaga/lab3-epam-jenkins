@@ -34,7 +34,7 @@ pipeline{
                         $class: 'GitSCM',
                         branches: [[name: "*/${params.BRANCH_NAME}"]],
                         userRemoteConfigs: [[
-                            url: 'git@github.com:mateineaga/lab3-epam-jenkins.git',
+                            url: 'https://github.com/mateineaga/lab3-epam-jenkins.git',
                             credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
                         ]]
                     ])
