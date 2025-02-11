@@ -35,21 +35,21 @@ pipeline{
             }
         }
 
-        stage('Checkout Code') {
-            steps {
-                script {
-                    echo "Checking out branch ${params.BRANCH_NAME}"
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${params.BRANCH_NAME}"]],
-                        userRemoteConfigs: [[
-                            url: 'git@github.com:mateineaga/lab3-epam-jenkins.git',
-                            credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
-                        ]]
-                    ])
-                }
-            }
-        }
+        // stage('Checkout Code') {
+        //     steps {
+        //         script {
+        //             echo "Checking out branch ${params.BRANCH_NAME}"
+        //             checkout([
+        //                 $class: 'GitSCM',
+        //                 branches: [[name: "*/${params.BRANCH_NAME}"]],
+        //                 userRemoteConfigs: [[
+        //                     url: 'git@github.com:mateineaga/lab3-epam-jenkins.git',
+        //                     credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
+        //                 ]]
+        //             ])
+        //         }
+        //     }
+        // }
 
         stage('Build'){
             steps{
