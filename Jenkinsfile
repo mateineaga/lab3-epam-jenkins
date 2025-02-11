@@ -1,13 +1,10 @@
 pipeline{
     agent any
-    stages{
-        stage('Build'){
-            steps{
-                nodejs('node'){
-                    echo 'Building application.....'
-                    sh 'npm install'
+    stage('Testing') {
+            steps {
+                script {
+                    echo "Hello from branch main"
                 }
             }
         }
-    }
 }
