@@ -26,21 +26,21 @@ pipeline{
         //     }
         // }
 
-        // stage('Checkout Code') {
-        //     steps {
-        //         script {
-        //             echo "Checking out branch ${params.BRANCH_NAME}"
-        //             checkout([
-        //                 $class: 'GitSCM',
-        //                 branches: [[name: "*/${params.BRANCH_NAME}"]],
-        //                 userRemoteConfigs: [[
-        //                     url: 'git@github.com:mateineaga/lab3-epam-jenkins.git',
-        //                     credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
-        //                 ]]
-        //             ])
-        //         }
-        //     }
-        // }
+        stage('Checkout Code') {
+            steps {
+                script {
+                    echo "Checking out branch ${params.BRANCH_NAME}"
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "*/${params.BRANCH_NAME}"]],
+                        userRemoteConfigs: [[
+                            url: 'git@github.com:mateineaga/lab3-epam-jenkins.git',
+                            credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
+                        ]]
+                    ])
+                }
+            }
+        }
 
         // stage('Build'){
         //     steps{
@@ -87,28 +87,24 @@ pipeline{
                 script {
                     sh '''#!/bin/bash
                     if [[ "${BRANCH_NAME}" == "main" ]]; then
+
                         echo "Cleaning the running&stopped containers!"
                         docker stop nodemain:${IMAGE_TAG} || true
                         docker rm nodemain:${IMAGE_TAG} || true
 
                         echo "Running image nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
-                        echo "Cleaning the port:"
-
-                        echo 'matei' | sudo kill -9 \$(sudo lsof -t -i:3000)
 
                         docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
                     else
                         echo "Cleaning the running&stopped containers!"
+
                         docker stop nodedev:${IMAGE_TAG} || true
                         docker rm nodedev:${IMAGE_TAG} || true
 
                         echo "Running image nodedev:${IMAGE_TAG}"
                         
                         echo "Port: 3001"
-                        echo "Cleaning the port:"
-
-                        echo 'matei' | sudo -S kill -9 $(echo 'matei' | sudo -S lsof -t -i:3001)
 
                         docker run -d --expose 3001 -p 3001:3000 nodedev:${IMAGE_TAG}
                     fi
