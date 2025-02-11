@@ -6,33 +6,33 @@ pipeline{
         string(name: 'IMAGE_TAG', defaultValue: 'v1.0', description: 'Docker image tag')
     }
 
-    environment {
-        IMAGE_NAME = ''
-        FULL_IMAGE_NAME = ''
-        PORT = ''
-    }
+    // environment {
+    //     IMAGE_NAME = ''
+    //     FULL_IMAGE_NAME = ''
+    //     PORT = ''
+    // }
 
     stages {
-        stage('Setup Environment Variables') {
-            steps {
-                script {
-                    // Folosim shell scripting pentru setarea variabilelor
-                    sh '''#!/bin/bash
-                        if [[ "$BRANCH_NAME" == "main" ]]; then
-                            export IMAGE_NAME="nodemain"
-                            export PORT="3000"
-                        else
-                            export IMAGE_NAME="nodedev"
-                            export PORT="3001"
-                        fi
+    //     stage('Setup Environment Variables') {
+    //         steps {
+    //             script {
+    //                 // Folosim shell scripting pentru setarea variabilelor
+    //                 sh '''#!/bin/bash
+    //                     if [[ "$BRANCH_NAME" == "main" ]]; then
+    //                         export IMAGE_NAME="nodemain"
+    //                         export PORT="3000"
+    //                     else
+    //                         export IMAGE_NAME="nodedev"
+    //                         export PORT="3001"
+    //                     fi
 
-                        export FULL_IMAGE_NAME="mateineaga10/${IMAGE_NAME}:${IMAGE_TAG}"
-                        echo "Full Image Name: ${FULL_IMAGE_NAME}"
-                        echo "Port: ${PORT}"
-                    '''
-                }
-            }
-        }
+    //                     export FULL_IMAGE_NAME="mateineaga10/${IMAGE_NAME}:${IMAGE_TAG}"
+    //                     echo "Full Image Name: ${FULL_IMAGE_NAME}"
+    //                     echo "Port: ${PORT}"
+    //                 '''
+    //             }
+    //         }
+    //     }
 
         // stage('Checkout Code') {
         //     steps {
@@ -71,9 +71,16 @@ pipeline{
         stage('Build docker image'){
             steps{
                 sh '''#!/bin/bash
-                echo 'Building the image'
-                echo "${FULL_IMAGE_NAME}"
-                echo "${PORT}"
+                if [[ "$BRANCH_NAME" == "main" ]]; then
+                    echo 'Building the image for ${BRANCH_NAME}'
+                    echo "${BRANCH_NAME}"
+                    echo "Building nodemain:${IMAGE_TAG}"
+                    echo "Port: 3000"
+                else
+                    echo 'Building the image for ${BRANCH_NAME}'
+                    echo "${BRANCH_NAME}"
+                    echo "Building nodemain:${IMAGE_TAG}"
+                    echo "Port: 3001"
                 '''
                 // sh 'docker build -t "${FULL_IMAGE_NAME}" -f Dockerfile .'
             }
