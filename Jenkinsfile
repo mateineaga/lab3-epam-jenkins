@@ -17,7 +17,7 @@ pipeline{
             steps {
                 script {
                     // Folosim shell scripting pentru setarea variabilelor
-                    sh '''
+                    sh '''#!/bin/bash
                         if [[ "$BRANCH_NAME" == "main" ]]; then
                             export IMAGE_NAME="nodemain"
                             export PORT="3000"
