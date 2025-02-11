@@ -1,5 +1,3 @@
-def IMAGE_NAME
-def PORT
 pipeline{
     agent any
 
@@ -12,6 +10,9 @@ pipeline{
         stage('Setup Environment Variables') {
             steps {
                 script {
+                    def IMAGE_NAME
+                    def PORT
+                    
                     // Folosim shell scripting pentru setarea variabilelor
                     if (params.BRANCH_NAME == 'main') {
                         IMAGE_NAME = "nodemain:${params.IMAGE_TAG}"
