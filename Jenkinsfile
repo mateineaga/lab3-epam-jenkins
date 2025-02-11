@@ -89,24 +89,24 @@ pipeline{
                     if [[ "${BRANCH_NAME}" == "main" ]]; then
 
                         echo "Cleaning the running&stopped containers!"
-                        docker stop nodemain:${IMAGE_TAG} || true
-                        docker rm nodemain:${IMAGE_TAG} || true
+                        docker stop nodemain || true
+                        docker rm nodemain || true
 
                         echo "Running image nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
 
-                        docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
+                        docker run -d --expose 3000 -p 3000:3000 --name nodemainnodemain:${IMAGE_TAG}
                     else
                         echo "Cleaning the running&stopped containers!"
 
-                        docker stop nodedev:${IMAGE_TAG} || true
-                        docker rm nodedev:${IMAGE_TAG} || true
+                        docker stop nodedev || true
+                        docker rm nodedev || true
 
                         echo "Running image nodedev:${IMAGE_TAG}"
                         
                         echo "Port: 3001"
 
-                        docker run -d --expose 3001 -p 3001:3000 nodedev:${IMAGE_TAG}
+                        docker run -d --expose 3001 -p 3001:3000 --name nodedev nodedev:${IMAGE_TAG}
                     fi
                     '''
                 }
