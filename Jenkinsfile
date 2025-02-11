@@ -18,7 +18,7 @@ pipeline{
                 script {
                     // Folosim shell scripting pentru setarea variabilelor
                     sh '''
-                        if [ "$BRANCH_NAME" == "main" ]; then
+                        if [[ "$BRANCH_NAME" == "main" ]]; then
                             export IMAGE_NAME="nodemain"
                             export PORT="3000"
                         else
@@ -71,7 +71,8 @@ pipeline{
         stage('Build docker image'){
             steps{
                 echo 'Building the image'
-                sh 'docker build -t ${env.FULL_IMAGE_NAME} -f Dockerfile .'
+                echo ${env.FULL_IMAGE_NAME}
+                sh 'docker build -t matei -f Dockerfile .'
             }
         }
 
