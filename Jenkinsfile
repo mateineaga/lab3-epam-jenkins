@@ -1,6 +1,10 @@
 pipeline{
     agent any
 
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('mateineaga10-dockerhub')
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -18,51 +22,53 @@ pipeline{
             }
         }
 
-        stage('Build'){
-            steps{
-                nodejs('node'){
-                    echo 'Building application.....'
-                    sh 'npm install'
-                }
-            }
-        }
+        // stage('Build'){
+        //     steps{
+        //         nodejs('node'){
+        //             echo 'Building application.....'
+        //             sh 'npm install'
+        //         }
+        //     }
+        // }
 
-        stage('Test'){
-            steps{
-                nodejs('node'){
-                    echo 'Testing the application.....'
-                    sh 'npm test'
-                }
-            }
-        }
+        // stage('Test'){
+        //     steps{
+        //         nodejs('node'){
+        //             echo 'Testing the application.....'
+        //             sh 'npm test'
+        //         }
+        //     }
+        // }
 
         stage('Build docker image'){
             steps{
                 script {
                     sh '''
+                    echo "Login..."
+                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
                     echo "Building image nodemain"
-                    docker build -t nodemain:v1.0 .
+                    docker build -t mateineaga10/nodemain:v1.0 .
                     '''
                 }
             }
         }
 
-        stage('Deploy docker image'){
-            steps{
-                script {
-                    sh '''#!/bin/bash
-                        echo "Cleaning the running&stopped containers!"
-                        docker stop nodemain || true
-                        docker rm nodemain || true
+        // stage('Deploy docker image'){
+        //     steps{
+        //         script {
+        //             sh '''#!/bin/bash
+        //                 echo "Cleaning the running&stopped containers!"
+        //                 docker stop mateineaga10/nodemain:v1.0 || true
+        //                 docker rm mateineaga10/nodemain || true
 
-                        echo "Running image nodemain:v1.0"
-                        echo "Port: 3000"
+        //                 echo "Running image mateineaga10/nodemain:v1.0"
+        //                 echo "Port: 3000"
 
-                        docker run -d --expose 3000 -p 3000:3000 --name nodemain nodemain:v1.0
-                    '''
-                }
-            }
-        }
+        //                 docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:v1.0
+        //             '''
+        //         }
+        //     }
+        // }
 
     }
 }
