@@ -98,6 +98,10 @@ pipeline{
 
                         echo "Port: 3000"
 
+                        echo "Cleaning the port:"
+
+                        sudo kill -9 $(sudo lsof -t -i:3000)
+
                         docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
                     else
                         echo "Cleaning the running&stopped containers!"
@@ -107,6 +111,10 @@ pipeline{
                         echo "Running image nodedev:${IMAGE_TAG}"
 
                         echo "Port: 3001"
+
+                        echo "Cleaning the port:"
+
+                        sudo kill -9 $(sudo lsof -t -i:3001)
 
                         docker run -d --expose 3001 -p 3001:3000 nodedev:${IMAGE_TAG}
                     fi
