@@ -95,7 +95,7 @@ pipeline{
                         echo "Port: 3000"
                         echo "Cleaning the port:"
 
-                        sudo kill -9 \$(sudo lsof -t -i:3000)
+                        echo 'matei' | sudo kill -9 \$(sudo lsof -t -i:3000)
 
                         docker run -d --expose 3000 -p 3000:3000 nodemain:${params.IMAGE_TAG}
                     else
@@ -107,7 +107,7 @@ pipeline{
                         echo "Port: 3001"
                         echo "Cleaning the port:"
 
-                        sudo kill -9 \$(sudo lsof -t -i:3001)
+                        echo 'matei' | sudo -S kill -9 \$(sudo lsof -t -i:3001)
 
                         docker run -d --expose 3001 -p 3001:3000 nodedev:${params.IMAGE_TAG}
                     fi
