@@ -73,17 +73,17 @@ pipeline{
                 echo 'Building the image'
                 echo "${FULL_IMAGE_NAME}"
                 echo "${PORT}"
-                sh 'docker build -t "${FULL_IMAGE_NAME}" -f Dockerfile .'
+                // sh 'docker build -t "${FULL_IMAGE_NAME}" -f Dockerfile .'
             }
         }
 
-        stage('Deploy docker image'){
-            steps{
-                // echo 'Cleaning the existing containers!'
-                // sh 'docker rm $(docker ps -aq)'
-                echo 'Running the docker image created earlier!'
-                sh 'docker run -d --expose ${env.PORT} -p ${env.PORT}:${env.PORT} $(env.FULL_IMAGE_NAME)'
-            }
-        }
+        // stage('Deploy docker image'){
+        //     steps{
+        //         // echo 'Cleaning the existing containers!'
+        //         // sh 'docker rm $(docker ps -aq)'
+        //         echo 'Running the docker image created earlier!'
+        //         sh 'docker run -d --expose ${PORT} -p ${PORT}:${PORT} $(FULL_IMAGE_NAME)'
+        //     }
+        // }
     }
 }
