@@ -63,21 +63,21 @@ pipeline{
         stage('Build docker image'){
             steps{
                 script {
-                    sh """#!/bin/bash
-                    if [[ "${params.BRANCH_NAME}" == "main" ]]; then
-                        echo "Building the image for branch: ${params.BRANCH_NAME}"
-                        echo "Building nodemain:${params.IMAGE_TAG}"
+                    sh '''#!/bin/bash
+                    if [[ "${BRANCH_NAME}" == "main" ]]; then
+                        echo "Building the image for branch: ${BRANCH_NAME}"
+                        echo "Building nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
 
-                        docker build -t "nodemain:${params.IMAGE_TAG}" -f Dockerfile .
+                        docker build -t "nodemain:${IMAGE_TAG}" -f Dockerfile .
                     else
-                        echo "Building the image for branch: ${params.BRANCH_NAME}"
-                        echo "Building nodedev:${params.IMAGE_TAG}"
+                        echo "Building the image for branch: ${BRANCH_NAME}"
+                        echo "Building nodedev:${IMAGE_TAG}"
                         echo "Port: 3001"
 
-                        docker build -t nodedev:${params.IMAGE_TAG} -f Dockerfile .
+                        docker build -t nodedev:${IMAGE_TAG} -f Dockerfile .
                     fi
-                    """
+                    '''
                 }
             }
         }
@@ -85,33 +85,34 @@ pipeline{
         stage('Deploy docker image'){
             steps{
                 script {
-                    sh """#!/bin/bash
-                    if [[ "${params.BRANCH_NAME}" == "main" ]]; then
+                    sh '''#!/bin/bash
+                    if [[ "${BRANCH_NAME}" == "main" ]]; then
                         echo "Cleaning the running&stopped containers!"
-                        docker stop nodemain:${params.IMAGE_TAG} || true
-                        docker rm nodemain:${params.IMAGE_TAG} || true
+                        docker stop nodemain:${IMAGE_TAG} || true
+                        docker rm nodemain:${IMAGE_TAG} || true
 
-                        echo "Running image nodemain:${params.IMAGE_TAG}"
+                        echo "Running image nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
                         echo "Cleaning the port:"
 
                         echo 'matei' | sudo kill -9 \$(sudo lsof -t -i:3000)
 
-                        docker run -d --expose 3000 -p 3000:3000 nodemain:${params.IMAGE_TAG}
+                        docker run -d --expose 3000 -p 3000:3000 nodemain:${IMAGE_TAG}
                     else
                         echo "Cleaning the running&stopped containers!"
-                        docker stop nodedev:${params.IMAGE_TAG} || true
-                        docker rm nodedev:${params.IMAGE_TAG} || true
+                        docker stop nodedev:${IMAGE_TAG} || true
+                        docker rm nodedev:${IMAGE_TAG} || true
 
+                        echo "Running image nodedev:${IMAGE_TAG}"
                         
                         echo "Port: 3001"
                         echo "Cleaning the port:"
 
                         echo 'matei' | sudo -S kill -9 $(echo 'matei' | sudo -S lsof -t -i:3001)
 
-                        docker run -d --expose 3001 -p 3001:3000 nodedev:${params.IMAGE_TAG}
+                        docker run -d --expose 3001 -p 3001:3000 nodedev:${IMAGE_TAG}
                     fi
-                    """
+                    '''
                 }
             }
         }
