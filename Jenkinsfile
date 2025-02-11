@@ -53,8 +53,8 @@ pipeline{
         stage('Build docker image'){
             agent {
                 docker {
-                    image 'docker'
-                    args '-v $HOME/.docker:/root/.docker'
+                    image 'docker:19.03.12'  // Imaginea care are Docker preinstalat
+                    args '--privileged'  // Permite rularea Docker în Docker (esential)
                 } 
             }
             steps{
