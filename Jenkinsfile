@@ -25,7 +25,7 @@ pipeline{
         stage('Hadolint install'){
             steps{
                 script{
-                    sh'''
+                    sh'''#!/bin/bash
                     wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
                     sudo mv hadolint /usr/local/bin/hadolint
                     chmod +x /usr/local/bin/hadolint
