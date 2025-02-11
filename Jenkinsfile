@@ -82,6 +82,7 @@ pipeline{
                         echo "${BRANCH_NAME}"
                         echo "Building nodemain:${IMAGE_TAG}"
                         echo "Port: 3001"
+                    fi
                     '''
                 }
                 // sh 'docker build -t "${FULL_IMAGE_NAME}" -f Dockerfile .'
