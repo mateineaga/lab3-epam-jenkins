@@ -53,8 +53,8 @@ pipeline{
         stage('Build docker image'){
             agent {
                 docker {
-                    image 'docker:19.03.12'  // Imaginea care are Docker preinstalat
-                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'  // Permite rularea Docker în Docker (esential)
+                    image 'mateineaga10/jenkins-matei'  // Imaginea care are Docker preinstalat
+                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):$(which docker)'  // Permite rularea Docker în Docker (esential)
                 } 
             }
             steps{
