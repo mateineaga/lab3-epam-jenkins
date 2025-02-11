@@ -103,7 +103,7 @@ pipeline{
                         docker stop nodedev:${params.IMAGE_TAG} || true
                         docker rm nodedev:${params.IMAGE_TAG} || true
 
-                        echo "Running image nodedev:'${params.IMAGE_TAG}'"
+                        
                         echo "Port: 3001"
                         echo "Cleaning the port:"
 
