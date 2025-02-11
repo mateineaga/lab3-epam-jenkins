@@ -1,3 +1,6 @@
+def IMAGE_NAME
+def PORT
+
 pipeline{
     agent any
 
@@ -13,11 +16,11 @@ pipeline{
                     // Folosim shell scripting pentru setarea variabilelor
                     sh '''#!/bin/bash
                         if [[ "$BRANCH_NAME" == "main" ]]; then
-                            def IMAGE_NAME = "nodemain:${IMAGE_TAG}"
-                            def PORT = "3000"
+                            IMAGE_NAME = "nodemain:${IMAGE_TAG}"
+                            PORT = "3000"
                         else
-                            def IMAGE_NAME = "nodedev:${IMAGE_TAG}"
-                            def PORT = "3001"
+                            IMAGE_NAME = "nodedev:${IMAGE_TAG}"
+                            PORT = "3001"
                         fi
                     '''
                 }
