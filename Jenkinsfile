@@ -95,7 +95,7 @@ pipeline{
                         echo "Running image nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
 
-                        docker run -d --expose 3000 -p 3000:3000 --name nodemainnodemain:${IMAGE_TAG}
+                        docker run -d --expose 3000 -p 3000:3000 --name nodemain nodemain:${IMAGE_TAG}
                     else
                         echo "Cleaning the running&stopped containers!"
 
