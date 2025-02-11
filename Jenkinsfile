@@ -31,8 +31,8 @@ pipeline{
                     // env.FULL_IMAGE_NAME = "mateineaga10/${env.IMAGE_NAME}:${params.IMAGE_TAG}"
                     // echo "Full Image Name: ${env.FULL_IMAGE_NAME}"
                     // echo "Port: ${env.PORT}"
-                    echo $BRANCH_NAME
-                    echo $IMAGE_TAG
+                    echo ${params.BRANCH_NAME}
+                    echo ${params.IMAGE_TAG}
                 }
             }
         }
