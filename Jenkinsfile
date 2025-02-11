@@ -46,29 +46,42 @@ pipeline{
                     sh '''
                     echo "Login..."
                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+
                     echo "Building image nodemain"
                     docker build -t mateineaga10/nodemain:v1.0 .
+
+                    echo "Pushing image..."
+                    docker push mateineaga10/nodemain:v1.0
+
+                    echo "Deleting image from local"
+                    docker rmi mateineaga10/nodemain:v1.0
                     '''
                 }
             }
         }
 
-        // stage('Deploy docker image'){
-        //     steps{
-        //         script {
-        //             sh '''#!/bin/bash
-        //                 echo "Cleaning the running&stopped containers!"
-        //                 docker stop mateineaga10/nodemain:v1.0 || true
-        //                 docker rm mateineaga10/nodemain || true
+        stage('Deploy docker image to main'){
+            steps{
+                script {
+                    sh '''#!/bin/bash
+                        echo "Cleaning the running&stopped containers!"
+                        docker stop mateineaga10/nodemain:v1.0 || true
+                        docker rm mateineaga10/nodemain || true
 
-        //                 echo "Running image mateineaga10/nodemain:v1.0"
-        //                 echo "Port: 3000"
+                        echo "Login..."
+                        echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
 
-        //                 docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:v1.0
-        //             '''
-        //         }
-        //     }
-        // }
+                        echo "Pulling image..."
+                        docker pull mateineaga10/nodemain:v1.0
+
+                        echo "Running image mateineaga10/nodemain:v1.0"
+                        echo "Port: 3000"
+
+                        docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:v1.0
+                    '''
+                }
+            }
+        }
 
     }
 }
