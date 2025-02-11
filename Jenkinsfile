@@ -70,9 +70,11 @@ pipeline{
 
         stage('Build docker image'){
             steps{
+                sh '''#!/bin/bash
                 echo 'Building the image'
                 echo "${FULL_IMAGE_NAME}"
                 echo "${PORT}"
+                '''
                 // sh 'docker build -t "${FULL_IMAGE_NAME}" -f Dockerfile .'
             }
         }
