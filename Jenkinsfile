@@ -24,105 +24,94 @@ pipeline{
             }
         }
 
-        stage('Check Node.js and npm version') {
-            steps {
+        stage('Build'){
+            steps{
                 nodejs('node'){
-                    sh 'npm cache clean --force'
-                    sh 'node -v'
-                    sh 'npm -v'
+                    echo 'Building application.....'
                     sh 'npm install'
                 }
             }
         }
 
-        // stage('Build'){
-        //     steps{
-        //         nodejs('node'){
-        //             echo 'Building application.....'
-        //             sh 'npm install'
-        //         }
-        //     }
-        // }
+        stage('Test'){
+            steps{
+                nodejs('node'){
+                    echo 'Testing the application.....'
+                    sh 'npm test'
+                }
+            }
+        }
 
-        // stage('Test'){
-        //     steps{
-        //         nodejs('node'){
-        //             echo 'Testing the application.....'
-        //             sh 'npm test'
-        //         }
-        //     }
-        // }
+        stage("hadolint Dockerfile") {
+            agent {
+                docker {
+                    image 'hadolint/hadolint:latest-debian'  // Folosește imaginea corespunzătoare
+                }
+            }
+            steps {
+                sh 'hadolint Dockerfile'  // Salvezi output-ul în report.txt
+            }
+        }
 
-        // stage("hadolint Dockerfile") {
-        //     agent {
-        //         docker {
-        //             image 'hadolint/hadolint:latest-debian'  // Folosește imaginea corespunzătoare
-        //         }
-        //     }
-        //     steps {
-        //         sh 'hadolint Dockerfile'  // Salvezi output-ul în report.txt
-        //     }
-        // }
+        stage('Build docker image'){
 
-        // stage('Build docker image'){
+            agent { 
+                label "agent1" 
+            }
 
-        //     agent { 
-        //         label "agent1" 
-        //     }
+            steps{
+                script {
+                    sh '''
+                    echo "Login..."
+                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
 
-        //     steps{
-        //         script {
-        //             sh '''
-        //             echo "Login..."
-        //             echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                    echo "Building image nodemain"
+                    docker build -t mateineaga10/nodemain:v1.0 .
 
-        //             echo "Building image nodemain"
-        //             docker build -t mateineaga10/nodemain:v1.0 .
+                    echo "Pushing image..."
+                    docker push mateineaga10/nodemain:v1.0
 
-        //             echo "Pushing image..."
-        //             docker push mateineaga10/nodemain:v1.0
+                     echo "Deleting image from local"
+                     docker rmi mateineaga10/nodemain:v1.0
+                    '''
+                }
+            }
+        }
 
-        //              echo "Deleting image from local"
-        //              docker rmi mateineaga10/nodemain:v1.0
-        //             '''
-        //         }
-        //     }
-        // }
+        stage("Vulnerability scan: trivy for Dockerfile") {
 
-        // stage("Vulnerability scan: trivy for Dockerfile") {
+            agent { 
+                label "agent1" 
+            }
 
-        //     agent { 
-        //         label "agent1" 
-        //     }
-
-        //     steps {
-        //         sh 'trivy --no-progress --exit-code 0 --severity HIGH,MEDIUM,LOW mateineaga10/nodemain:v1.0'
-        //     }
-        // }
+            steps {
+                sh 'trivy --no-progress --exit-code 0 --severity HIGH,MEDIUM,LOW mateineaga10/nodemain:v1.0'
+            }
+        }
 
 
-        // stage('Deploy docker image to main'){
-        //     steps{
-        //         script {
-        //             sh '''#!/bin/bash
-        //                 echo "Cleaning the running&stopped containers!"
-        //                 docker stop nodemain || true
-        //                 docker rm nodemain || true
-        //                 
-        //                 echo "Login..."
-        //                 echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+        stage('Deploy docker image to main'){
+            steps{
+                script {
+                    sh '''#!/bin/bash
+                        echo "Cleaning the running&stopped containers!"
+                        docker stop nodemain || true
+                        docker rm nodemain || true
+                        
+                        echo "Login..."
+                        echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
 
-        //                 echo "Pulling image..."
-        //                 docker pull mateineaga10/nodemain:v1.0
+                        echo "Pulling image..."
+                        docker pull mateineaga10/nodemain:v1.0
 
-        //                 echo "Running image mateineaga10/nodemain:v1.0"
-        //                 echo "Port: 3000"
+                        echo "Running image mateineaga10/nodemain:v1.0"
+                        echo "Port: 3000"
 
-        //                 docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:v1.0
-        //             '''
-        //         }
-        //     }
-        // }
+                        docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:v1.0
+                    '''
+                }
+            }
+        }
 
     }
 }
