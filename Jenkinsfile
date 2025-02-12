@@ -1,3 +1,4 @@
+@Library('shared-library') _
 pipeline{
     agent { 
         label "built-in"
@@ -21,6 +22,12 @@ pipeline{
                         ]]
                     ])
                 }
+            }
+        }
+
+        stage('Testing from shared library!') {
+            steps {
+                helloWorld()
             }
         }
 
