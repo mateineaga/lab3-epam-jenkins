@@ -1,9 +1,9 @@
-FROM node:7.8.0
+FROM node:19-bullseye
 
 WORKDIR /opt
 
 COPY . /opt
 
-RUN npm config set timeout 100000 && npm install
+RUN npm install
 
 ENTRYPOINT ["npm", "run", "start"]
