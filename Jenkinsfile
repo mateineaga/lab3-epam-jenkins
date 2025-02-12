@@ -27,8 +27,10 @@ pipeline{
         stage('Check Node.js and npm version') {
             steps {
                 nodejs('node'){
+                    sh 'npm cache clean --force'
                     sh 'node -v'
                     sh 'npm -v'
+                    sh 'npm install'
                 }
             }
         }
@@ -79,6 +81,9 @@ pipeline{
 
         //             echo "Pushing image..."
         //             docker push mateineaga10/nodemain:v1.0
+
+        //              echo "Deleting image from local"
+        //              docker rmi mateineaga10/nodemain:v1.0
         //             '''
         //         }
         //     }
@@ -103,10 +108,7 @@ pipeline{
         //                 echo "Cleaning the running&stopped containers!"
         //                 docker stop nodemain || true
         //                 docker rm nodemain || true
-
-        //                 echo "Deleting image from local"
-        //                 docker rmi mateineaga10/nodemain:v1.0
-
+        //                 
         //                 echo "Login..."
         //                 echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
 
