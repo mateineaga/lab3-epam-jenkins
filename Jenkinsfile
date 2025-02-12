@@ -51,12 +51,7 @@ pipeline{
         }
 
         stage('Build docker image'){
-            agent {
-                docker {
-                    image 'mateineaga10/jenkins-matei'  // Imaginea care are Docker preinstalat
-                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):$(which docker)'  // Permite rularea Docker în Docker (esential)
-                } 
-            }
+            agent { label 'docker' }
             steps{
                 script {
                     sh '''
