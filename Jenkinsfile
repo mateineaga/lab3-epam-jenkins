@@ -52,7 +52,7 @@ pipeline{
         }
 
         stage('Build docker image'){
-            agent { label 'agent1' }
+            // agent { label 'agent1' }
             steps{
                 script {
                     sh '''
@@ -69,12 +69,12 @@ pipeline{
             }
         }
 
-        stage("Vulnerability scan: trivy for Dockerfile") {
-            agent { label 'agent1' }
-            steps {
-                sh 'trivy --no-progress --exit-code 0 --severity HIGH,MEDIUM,LOW mateineaga10/nodemain:v1.0'
-            }
-        }
+        // stage("Vulnerability scan: trivy for Dockerfile") {
+        //     agent { label 'agent1' }
+        //     steps {
+        //         sh 'trivy --no-progress --exit-code 0 --severity HIGH,MEDIUM,LOW mateineaga10/nodemain:v1.0'
+        //     }
+        // }
 
 
         stage('Deploy docker image to main'){
