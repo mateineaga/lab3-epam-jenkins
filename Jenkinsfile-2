@@ -139,7 +139,7 @@ pipeline{
                         echo "Running image nodemain:${IMAGE_TAG}"
                         echo "Port: 3000"
 
-                        docker run -d --expose 3000 -p 3000:3000 --name nodemain nodemain:${IMAGE_TAG}
+                        docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:${IMAGE_TAG}
                     
                     else
 
@@ -153,7 +153,7 @@ pipeline{
                         echo "Running image nodedev:${IMAGE_TAG}"
                         echo "Port: 3001"
 
-                        docker run -d --expose 3001 -p 3001:3000 --name nodedev nodedev:${IMAGE_TAG}
+                        docker run -d --expose 3001 -p 3001:3000 --name nodedev mateineaga10/nodedev:${IMAGE_TAG}
                     fi
                     '''
                 }
