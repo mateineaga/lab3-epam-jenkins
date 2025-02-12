@@ -64,13 +64,18 @@ pipeline{
 
                     echo "Pushing image..."
                     docker push mateineaga10/nodemain:v1.0
-
-                    echo "Deleting image from local"
-                    docker rmi mateineaga10/nodemain:v1.0
                     '''
                 }
             }
         }
+
+        stage("Vulnerability scan: trivy for Dockerfile") {
+            agent { label 'agent1' }
+            steps {
+                sh 'trivy --no-progress --exit-code 0 --severity HIGH,MEDIUM,LOW mateineaga10/nodemain:v1.0'
+            }
+        }
+
 
         stage('Deploy docker image to main'){
             steps{
@@ -79,6 +84,9 @@ pipeline{
                         echo "Cleaning the running&stopped containers!"
                         docker stop nodemain || true
                         docker rm nodemain || true
+
+                        echo "Deleting image from local"
+                        docker rmi mateineaga10/nodemain:v1.0
 
                         echo "Login..."
                         echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
