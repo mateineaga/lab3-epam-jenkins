@@ -65,14 +65,14 @@ pipeline{
                     echo "Login..."
                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
 
+                    echo "Deleting image from local"
+                    docker rmi mateineaga10/nodemain:v1.0 || true
+
                     echo "Building image nodemain"
                     docker build -t mateineaga10/nodemain:v1.0 .
 
                     echo "Pushing image..."
                     docker push mateineaga10/nodemain:v1.0
-
-                     echo "Deleting image from local"
-                     docker rmi mateineaga10/nodemain:v1.0
                     '''
                 }
             }
