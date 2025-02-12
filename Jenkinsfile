@@ -1,5 +1,7 @@
 pipeline{
-    agent { label 'built-in' }
+    agent { 
+        label "built-in"
+    }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('mateineaga10-dockerhub')
