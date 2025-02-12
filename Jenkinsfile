@@ -31,14 +31,14 @@ pipeline{
             }
         }
 
-        // stage('Test'){
-        //     steps{
-        //         nodejs('node'){
-        //             echo 'Testing the application.....'
-        //             sh 'npm test'
-        //         }
-        //     }
-        // }
+        stage('Test'){
+            steps{
+                nodejs('node'){
+                    echo 'Testing the application.....'
+                    sh 'npm version'
+                }
+            }
+        }
 
         stage("hadolint Dockerfile") {
             agent {
