@@ -28,7 +28,7 @@ pipeline{
             steps{
                 nodejs('node'){
                     echo 'Building application.....'
-                    sh 'npm version'
+                    sh 'npm install'
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline{
             steps{
                 nodejs('node'){
                     echo 'Testing the application.....'
-                    sh 'npm version'
+                    sh 'npm test'
                 }
             }
         }
@@ -80,7 +80,7 @@ pipeline{
             agent { 
                 label "agent1" 
             }
-            
+
             steps {
                 sh 'trivy --no-progress --exit-code 0 --severity HIGH,MEDIUM,LOW mateineaga10/nodemain:v1.0'
             }
