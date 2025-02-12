@@ -4,11 +4,6 @@ pipeline{
         label "built-in"
     }
 
-    parameters {
-        choice(name: 'BRANCH_NAME', choices: ['main', 'dev'], description: 'Choose the environment to deploy')
-        string(name: 'IMAGE_TAG', defaultValue: 'v1.0', description: 'Docker image tag')
-    }
-
     environment {
         DOCKERHUB_CREDENTIALS = credentials('mateineaga10-dockerhub')
     }
@@ -17,13 +12,13 @@ pipeline{
         stage('Checkout Code') {
             steps {
                 script {
-                    echo "Checking out branch ${params.BRANCH_NAME}"
+                    echo "Checking out branch main"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "*/${params.BRANCH_NAME}"]],
+                        branches: [[name: "*/main"]],
                         userRemoteConfigs: [[
                             url: 'https://github.com/mateineaga/lab3-epam-jenkins.git',
-                            credentialsId: 'GitCredentials'  // Folosim GitCredentials pentru autentificare
+                            credentialsId: 'GitCredentials'
                         ]]
                     ])
                 }
@@ -73,37 +68,18 @@ pipeline{
 
             steps{
                 script {
-                    sh '''#!/bin/bash
+                    sh '''
                     echo "Login..."
                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                    
-                    if [[ "${BRANCH_NAME}" == "main" ]]; then
-                        cp src/logo.svg main_logo.svg
 
-                        echo "Deleting image from local"
-                        docker rmi mateineaga10/nodemain:v1.0 || true
+                    echo "Deleting image from local"
+                    docker rmi mateineaga10/nodemain:v1.0 || true
 
-                        echo "Building the image for branch: ${BRANCH_NAME}"
-                        echo "Building nodemain:${IMAGE_TAG}"
+                    echo "Building image nodemain"
+                    docker build -t mateineaga10/nodemain:v1.0 .
 
-                        docker build -t "mateineaga10/nodemain:${IMAGE_TAG}" -f Dockerfile .
-                    
-                        echo "Pushing image..."
-                        docker push mateineaga10/nodemain:${IMAGE_TAG}
-                    else
-                        cp src/logo.svg dev_logo.svg
-
-                        echo "Deleting image from local"
-                        docker rmi mateineaga10/nodedev:v1.0 || true
-
-                        echo "Building the image for branch: ${BRANCH_NAME}"
-                        echo "Building nodedev:${IMAGE_TAG}"
-
-                        docker build -t "mateineaga10/nodedev:${IMAGE_TAG}" -f Dockerfile .
-                    
-                        echo "Pushing image..."
-                        docker push mateineaga10/nodedev:${IMAGE_TAG}
-                    fi
+                    echo "Pushing image..."
+                    docker push mateineaga10/nodemain:v1.0
                     '''
                 }
             }
@@ -120,41 +96,25 @@ pipeline{
             }
         }
 
-        stage('Deploy docker image'){
+
+        stage('Deploy docker image to main'){
             steps{
                 script {
                     sh '''#!/bin/bash
-                    echo "Login..."
-                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                    
-                    if [[ "${BRANCH_NAME}" == "main" ]]; then
-
                         echo "Cleaning the running&stopped containers!"
                         docker stop nodemain || true
                         docker rm nodemain || true
+                        
+                        echo "Login..."
+                        echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
 
                         echo "Pulling image..."
-                        docker pull mateineaga10/nodemain:${IMAGE_TAG}
+                        docker pull mateineaga10/nodemain:v1.0
 
-                        echo "Running image nodemain:${IMAGE_TAG}"
+                        echo "Running image mateineaga10/nodemain:v1.0"
                         echo "Port: 3000"
 
-                        docker run -d --expose 3000 -p 3000:3000 --name nodemain nodemain:${IMAGE_TAG}
-                    
-                    else
-
-                        echo "Cleaning the running&stopped containers!"
-                        docker stop nodedev || true
-                        docker rm nodedev || true
-
-                        echo "Pulling image..."
-                        docker pull mateineaga10/nodedev:${IMAGE_TAG}
-
-                        echo "Running image nodedev:${IMAGE_TAG}"
-                        echo "Port: 3001"
-
-                        docker run -d --expose 3001 -p 3001:3000 --name nodedev nodedev:${IMAGE_TAG}
-                    fi
+                        docker run -d --expose 3000 -p 3000:3000 --name nodemain mateineaga10/nodemain:v1.0
                     '''
                 }
             }
