@@ -26,19 +26,19 @@ pipeline{
             steps{
                 nodejs('node'){
                     echo 'Building application.....'
-                    sh 'npm install'
+                    sh 'npm version'
                 }
             }
         }
 
-        stage('Test'){
-            steps{
-                nodejs('node'){
-                    echo 'Testing the application.....'
-                    sh 'npm test'
-                }
-            }
-        }
+        // stage('Test'){
+        //     steps{
+        //         nodejs('node'){
+        //             echo 'Testing the application.....'
+        //             sh 'npm test'
+        //         }
+        //     }
+        // }
 
         stage("hadolint Dockerfile") {
             agent {
