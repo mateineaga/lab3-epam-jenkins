@@ -1,5 +1,5 @@
 pipeline{
-    agent any
+    agent none
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('mateineaga10-dockerhub')
@@ -39,6 +39,7 @@ pipeline{
         //         }
         //     }
         // }
+
         stage("hadolint Dockerfile") {
             agent {
                 docker {
@@ -51,7 +52,7 @@ pipeline{
         }
 
         stage('Build docker image'){
-            agent { label 'docker' }
+            agent { label 'agent1' }
             steps{
                 script {
                     sh '''
