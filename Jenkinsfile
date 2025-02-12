@@ -26,8 +26,10 @@ pipeline{
 
         stage('Check Node.js and npm version') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
+                nodejs('node'){
+                    sh 'node -v'
+                    sh 'npm -v'
+                }
             }
         }
 
